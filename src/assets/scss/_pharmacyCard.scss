@@ -1,0 +1,36 @@
+.card{
+  display: flex;
+  flex-direction: column;
+  &-header{
+    display: flex;
+    justify-content: space-around;
+  }
+  &-mask{
+    color:white;
+    border-radius: 10px;
+
+  }
+}
+.mask{
+  &-nums{
+    strong{
+      font-weight: bold;
+      font-size: 2rem;
+    }
+    span{
+      font-size: .75rem;
+    }
+  }
+  &-container{
+    position: relative;
+    overflow: hidden;
+  }
+  &-icon{
+    width: 49px;
+    height: 49px;
+    position: absolute;
+    top: 0;
+    right:-13px;
+    background-image: url("/maskmap_with_vue/public/icon/check2x.png");
+  }
+}

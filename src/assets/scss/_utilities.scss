@@ -1,0 +1,107 @@
+$colors: (
+  "primary": #11787a,
+  "necessary": #16a085,
+  "secondary": #e67e22,
+  "info": #f39c12,
+  "urgent": #566778,
+  "important": #34495e,
+  "vital": #70777c,
+  "crucial": #566778,
+  "optional": #fafafa,
+  "white": white,
+);
+
+$spacer: 1rem !default;
+$spacers: (
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer * 0.75,
+  4: $spacer * 1,
+  5: $spacer * 1.25,
+  6: $spacer * 1.5,
+  7: $spacer * 1.75,
+  8: $spacer * 2,
+  9: $spacer * 2.25,
+  "auto": auto,
+);
+$breakpoints: (
+  "phone": 667px,
+  "ipad": 992px,
+  "desktop": 1200px,
+);
+
+@each $name, $color in $colors {
+  .bg-#{$name} {
+    background-color: $color;
+  }
+  .text-#{$name} {
+    color: $color;
+  }
+}
+
+@each $name, $value in $spacers {
+  .m-#{$name} {
+    margin: $value;
+  }
+  .ml-#{$name} {
+    margin-left: $value;
+  }
+  .mr-#{$name} {
+    margin-right: $value;
+  }
+  .mx-#{$name} {
+    margin-left: $value;
+    margin-right: $value;
+  }
+  .mt-#{$name} {
+    margin-top: $value;
+  }
+  .mb-#{$name} {
+    margin-bottom: $value;
+  }
+  .my-#{$name} {
+    margin-top: $value;
+  }
+  .p-#{$name} {
+    padding: $value;
+  }
+  .pl-#{$name} {
+    padding-left: $value;
+  }
+  .pr-#{$name} {
+    padding-right: $value;
+  }
+  .px-#{$name} {
+    padding-left: $value;
+    padding-right: $value;
+  }
+  .pt-#{$name} {
+    padding-top: $value;
+  }
+  .pb-#{$name} {
+    padding-bottom: $value;
+  }
+  .py-#{$name} {
+    padding-top: $value;
+    padding-bottom: $value;
+  }
+  .fs-#{$name} {
+    font-size: $value;
+  }
+}
+
+@mixin respond-up($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (min-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
+
+@mixin respond-down($breakpoint) {
+  @if map-has-key($breakpoints, $breakpoint) {
+    @media (max-width: map-get($breakpoints, $breakpoint)) {
+      @content;
+    }
+  }
+}
