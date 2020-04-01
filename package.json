@@ -39,7 +39,10 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "linebreak-style": ["error", "windows"],
+      "arrow-parens": ["error", "as-needed"]
+    }
   },
   "browserslist": [
     "> 1%",

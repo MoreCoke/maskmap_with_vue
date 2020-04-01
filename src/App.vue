@@ -21,12 +21,17 @@ export default {
 <style lang="scss">
 @import "./assets/all";
 
-body,#app{
+#app{
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: 'Noto Sans TC', sans-serif;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
 }
 .wrapper{
   flex:1;
+  margin: auto;
 }
 </style>

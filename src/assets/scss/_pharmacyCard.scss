@@ -1,36 +1,77 @@
-.card{
+.card {
   display: flex;
   flex-direction: column;
-  &-header{
+  box-shadow: 0px 3px 10px #0000001a;
+  border-radius: 10px;
+  opacity: 1;
+  &-header {
     display: flex;
     justify-content: space-around;
+    margin-bottom: 2rem;
   }
-  &-mask{
-    color:white;
-    border-radius: 10px;
-
+  &-content {
+    font-size: 14px;
+    p {
+      color: $stock-none;
+      margin-bottom: 14px;
+      .title,
+      .subtitle {
+        color: $primary;
+        margin-right: 10px;
+      }
+      .title {
+        font-weight: bold;
+        position: relative;
+        &::before{
+          content:"";
+          position: absolute;
+          width: 4px;
+          height: 1.5rem;
+          border-radius: 0px 4px 4px 0px;
+          background-color: $primary;
+          left:-.75rem;
+          bottom: 0;
+          transform: translateY(10%);
+          
+        }
+      }
+      small {
+        font-size: 11px;
+      }
+      a {
+        font-size: 12px;
+        color: $stock-none;
+        float: right;
+      }
+    }
   }
 }
-.mask{
-  &-nums{
-    strong{
+.mask {
+  color: $white;
+  border-radius: 10px;
+  width: 150px;
+  overflow: hidden;
+  &-nums {
+    strong {
       font-weight: bold;
       font-size: 2rem;
+      line-height: 47px;
     }
-    span{
-      font-size: .75rem;
+    span {
+      font-size: 0.75rem;
     }
   }
-  &-container{
+  &-info {
     position: relative;
-    overflow: hidden;
   }
-  &-icon{
+  &-icon {
     width: 49px;
     height: 49px;
     position: absolute;
-    top: 0;
-    right:-13px;
-    background-image: url("/maskmap_with_vue/public/icon/check2x.png");
+    bottom: 0;
+    right: -18px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
   }
 }

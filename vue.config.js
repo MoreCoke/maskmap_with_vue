@@ -1,3 +1,5 @@
 module.exports = {
-  publicPath: '/maskmap_with_vue/'
-}
+  publicPath: process.env.NODE_ENV === 'production'
+    ? '/maskmap_with_vue/'
+    : '/',
+};

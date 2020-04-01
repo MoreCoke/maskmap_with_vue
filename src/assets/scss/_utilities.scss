@@ -1,14 +1,25 @@
+$primary: #34495e;
+$stock-full: #11787a;
+$stock-few: #e67e22;
+$stock-none: #70777c;
+$open: #16a085;
+$almost-close: #f39c12;
+$close: #A9A9A9;
+$detail: #566778;
+$background: #fafafa;
+$white: white;
+
 $colors: (
-  "primary": #11787a,
-  "necessary": #16a085,
-  "secondary": #e67e22,
-  "info": #f39c12,
-  "urgent": #566778,
-  "important": #34495e,
-  "vital": #70777c,
-  "crucial": #566778,
-  "optional": #fafafa,
-  "white": white,
+  "primary": $primary,
+  "stock-full": $stock-full,
+  "stock-few": $stock-few,
+  "stock-none": $stock-none,
+  "open": $open,
+  "almost-close": $almost-close,
+  "close": $close,
+  "detail": $detail,
+  "background": $background,
+  "white": $white,
 );
 
 $spacer: 1rem !default;
