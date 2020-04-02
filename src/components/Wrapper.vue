@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <PharmacyCard v-if="maskData[0]" :pharmacy="maskData[0]"></PharmacyCard>
+    <PharmacyCard v-if="maskData[0]" :pharmacy="maskData[0]" :geometry="latLongData[0]"></PharmacyCard>
   </div>
 </template>
 <script>
@@ -23,12 +23,8 @@ export default {
     this.axios.get(maskUrl).then(response => {
       this.loading = true;
       const allData = response.data.features;
-      this.latLongData = allData.map(
-        element => element.geometry.coordinates,
-      );
-      this.maskData = allData.map(
-        element => element.properties,
-      );
+      this.latLongData = allData.map(element => element.geometry.coordinates);
+      this.maskData = allData.map(element => element.properties);
       this.loading = false;
     });
   },

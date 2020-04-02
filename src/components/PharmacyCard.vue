@@ -1,42 +1,51 @@
 <template>
   <div class="card p-3">
+    <button @click="getMyPosition">click me</button>
     <div class="card-header">
-      <div class="mask px-3 py-4 mr-4 bg-stock-full">
+      <div class="mask px-3 py-4 mr-4" :class="handleMaskRender(pharmacy.mask_adult).bgc">
         <div class="mb-2">成人口罩數量</div>
         <div class="mask-info">
           <div class="mask-nums">
             <strong>{{pharmacy.mask_adult}}</strong>
             <span>片</span>
           </div>
-          <div class="mask-icon" :style="{ backgroundImage: `url(${myUrl})` }"></div>
+          <div
+            class="mask-icon"
+            :style="{ backgroundImage: `url(${handleMaskRender(pharmacy.mask_adult).url})` }"
+          ></div>
         </div>
       </div>
-      <div class="mask px-3 py-4 bg-stock-few">
+      <div class="mask px-3 py-4" :class="handleMaskRender(pharmacy.mask_child).bgc">
         <div class="mb-2">兒童口罩數量</div>
         <div class="mask-info">
           <div class="mask-nums">
             <strong>{{pharmacy.mask_child}}</strong>
             <span>片</span>
           </div>
-          <div class="mask-icon" :style="{ backgroundImage: `url(${myUrl})` }"></div>
+          <div
+            class="mask-icon"
+            :style="{ backgroundImage: `url(${handleMaskRender(pharmacy.mask_child).url})` }"
+          ></div>
         </div>
       </div>
     </div>
     <div class="card-content">
       <p>
         <span class="title badge-stock-full">{{pharmacy.name}}</span>
-        <small>1.2KM</small>
         <span></span>
       </p>
       <p>
         <span class="subtitle">地址</span>
         {{pharmacy.address}}
-        <a href="#">於地圖查看</a>
+        <a
+          :href="crateGoogleSearchUrl(pharmacy.name,pharmacy.address)"
+          target="_blank"
+        >於地圖查看</a>
       </p>
       <p>
         <span class="subtitle">電話</span>
         {{pharmacy.phone}}
-        <a href="#">撥打電話</a>
+        <a :href="`tel:${pharmacy.phone}`">撥打電話</a>
       </p>
       <p>
         <span class="subtitle">備註</span>
@@ -48,46 +57,78 @@
 <script>
 export default {
   name: 'PharmacyCard',
-  props: ['pharmacy'],
+  props: ['pharmacy', 'geometry'],
   data() {
     return {
-      iconUrl: 'icon/ic_stock_full@2x@2x.png',
-      icon: [
-        {
-          type: 'stock-full',
-          url: 'icon/ic_stock_full@2x@2x.png',
-        },
-        {
-          type: 'stock-few',
-          url: 'icon/ic_stock_few@2x@2x.png',
-        },
-        {
-          type: 'stock-none',
-          url: 'icon/ic_stock_none@2x@2x.png',
-        },
-      ],
+      propGeometry: this.geometry,
       publicPath: process.env.BASE_URL,
+      googleSearch: 'https://www.google.com/maps/search/?api=1&query=',
     };
   },
   methods: {
-  },
-  computed: {
-    myUrl() {
-      return this.publicPath + this.iconUrl;
+    handleMaskRender(maskNums) {
+      let maskSatus;
+      if (maskNums > 100) {
+        maskSatus = {
+          bgc: 'bg-stock-full',
+          url: `${this.publicPath}icon/ic_stock_full@2x@2x.png`,
+        };
+      }
+      if (maskNums > 0 && maskNums < 100) {
+        maskSatus = {
+          bgc: 'bg-stock-few',
+          url: `${this.publicPath}icon/ic_stock_few@2x@2x.png`,
+        };
+      }
+      if (maskNums === 0) {
+        maskSatus = {
+          bgc: 'bg-stock-none',
+          url: `${this.publicPath}icon/ic_stock_none@2x@2x.png`,
+        };
+      }
+      return maskSatus;
     },
-    handleStockRender(masknums) {
-      let index;
-      if (masknums > 100) {
-        index = this.icon.findIndex(element => element.type === 'stock-full');
+    crateGoogleSearchUrl(name, address) {
+      return `${this.googleSearch}${name}+${address}`;
+    },
+    // calDistanceToPharmacy(myLocation, pharmacyLocation) {
+    // function GetDistance(lat1, lng1, lat2, lng2) {
+    //   var radLat1 = (lat1 * Math.PI) / 180.0;
+    //   var radLat2 = (lat2 * Math.PI) / 180.0;
+    //   var a = radLat1 - radLat2;
+    //   var b = (lng1 * Math.PI) / 180.0 - (lng2 * Math.PI) / 180.0;
+    //   var s =
+    //     2 *
+    //     Math.asin(
+    //       Math.sqrt(
+    //         Math.pow(Math.sin(a / 2), 2) +
+    //           Math.cos(radLat1) *
+    //             Math.cos(radLat2) *
+    //             Math.pow(Math.sin(b / 2), 2),
+    //       ),
+    //     );
+    //   s = s * 6378.137; // EARTH_RADIUS;
+    //   s = Math.round(s * 10000) / 10000;
+    //   return s;
+    // }
+    // },
+    getMyPosition() {
+      function success(position) {
+        const {
+          coords: { latitude: lat },
+        } = position;
+        const {
+          coords: { longitude: long },
+        } = position;
+        return `${lat}+${long}`;
       }
-      if (masknums < 100 && masknums > 0) {
-        index = this.icon.findIndex(element => element.type === 'stock-few');
+      function error() {
+        console.log('Can not get your location!');
       }
-      if (masknums === 0) {
-        index = this.icon.findIndex(element => element === 'stock-none');
-      }
-      return this.icon[index];
+      navigator.geolocation.getCurrentPosition(success, error);
+      return 'done';
     },
   },
+  computed: {},
 };
 </script>

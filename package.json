@@ -40,8 +40,20 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "linebreak-style": ["error", "windows"],
-      "arrow-parens": ["error", "as-needed"]
+      "linebreak-style": [
+        "error",
+        "windows"
+      ],
+      "arrow-parens": [
+        "error",
+        "as-needed"
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 300
+        }
+      ]
     }
   },
   "browserslist": [
