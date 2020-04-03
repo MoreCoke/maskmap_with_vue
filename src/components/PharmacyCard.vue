@@ -1,6 +1,5 @@
 <template>
   <div class="card p-3">
-    <button @click="getMyPosition">click me</button>
     <div class="card-header">
       <div class="mask px-3 py-4 mr-4" :class="handleMaskRender(pharmacy.mask_adult).bgc">
         <div class="mb-2">成人口罩數量</div>
@@ -31,8 +30,9 @@
     </div>
     <div class="card-content">
       <p>
-        <span class="title badge-stock-full">{{pharmacy.name}}</span>
-        <span></span>
+        <span class="label-open"></span>
+        <span class="title">{{pharmacy.name}}</span>
+        <small>{{getDistance(coordinate)}}KM</small>
       </p>
       <p>
         <span class="subtitle">地址</span>
@@ -60,7 +60,8 @@ export default {
   props: ['pharmacy', 'geometry'],
   data() {
     return {
-      propGeometry: this.geometry,
+      coordinate: this.geometry,
+      myLatAndLong: [],
       publicPath: process.env.BASE_URL,
       googleSearch: 'https://www.google.com/maps/search/?api=1&query=',
     };
@@ -91,44 +92,45 @@ export default {
     crateGoogleSearchUrl(name, address) {
       return `${this.googleSearch}${name}+${address}`;
     },
-    // calDistanceToPharmacy(myLocation, pharmacyLocation) {
-    // function GetDistance(lat1, lng1, lat2, lng2) {
-    //   var radLat1 = (lat1 * Math.PI) / 180.0;
-    //   var radLat2 = (lat2 * Math.PI) / 180.0;
-    //   var a = radLat1 - radLat2;
-    //   var b = (lng1 * Math.PI) / 180.0 - (lng2 * Math.PI) / 180.0;
-    //   var s =
-    //     2 *
-    //     Math.asin(
-    //       Math.sqrt(
-    //         Math.pow(Math.sin(a / 2), 2) +
-    //           Math.cos(radLat1) *
-    //             Math.cos(radLat2) *
-    //             Math.pow(Math.sin(b / 2), 2),
-    //       ),
-    //     );
-    //   s = s * 6378.137; // EARTH_RADIUS;
-    //   s = Math.round(s * 10000) / 10000;
-    //   return s;
-    // }
-    // },
+    getDistance(geometry) {
+      function radius(d) {
+        return (d * Math.PI) / 180.0;
+      }
+      const r = 6371;
+      const lat0 = radius(this.myLatAndLong[1]);
+      const lat1 = radius(geometry[1]);
+      const lat = lat0 - lat1;
+      const long = radius(this.myLatAndLong[0]) - radius(geometry[0]);
+      const a = Math.sin(lat / 2) * Math.sin(lat / 2)
+          + Math.sin(long / 2)
+          * Math.sin(long / 2)
+          * Math.cos(lat0)
+          * Math.cos(lat1);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      const distance = (r * c).toFixed(1);
+      return distance;
+    },
     getMyPosition() {
+      const self = this;
       function success(position) {
-        const {
-          coords: { latitude: lat },
-        } = position;
         const {
           coords: { longitude: long },
         } = position;
-        return `${lat}+${long}`;
+        const {
+          coords: { latitude: lat },
+        } = position;
+        self.myLatAndLong.push(long);
+        self.myLatAndLong.push(lat);
       }
       function error() {
         console.log('Can not get your location!');
       }
       navigator.geolocation.getCurrentPosition(success, error);
-      return 'done';
     },
   },
   computed: {},
+  mounted() {
+    this.getMyPosition();
+  },
 };
 </script>

@@ -1,0 +1,59 @@
+.navbar {
+  background-color: $white;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  transition: background-color .5s ease;
+  &.active {
+    background-color: $primary;
+    color: $white;
+    span{
+      color: $white;
+    }
+    .navbar-list{
+      display: block;
+      // transition: background-color .5s ease;
+    }
+  }
+  @include respond-up(ipad) {
+    display: flex;
+    align-items: center;
+  }
+  &-list {
+    display: none;
+    li {
+      text-align: center;
+      margin: 1rem auto;
+    }
+    @include respond-up(ipad) {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      li {
+        margin-right: 1rem;
+        color: $primary;
+      }
+    }
+  }
+  &-toggler {
+    width: 26px;
+    height: 24px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    border: none;
+    background-color: transparent;
+    margin-left: auto;
+    @include respond-up(ipad) {
+      display: none;
+    }
+  }
+}
+.logo {
+  display: flex;
+  align-items: center;
+  span {
+    margin-left: 0.5rem;
+    color: $primary;
+    font-size: 1.5rem;
+  }
+}
