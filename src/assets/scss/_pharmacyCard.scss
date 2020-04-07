@@ -3,7 +3,8 @@
   flex-direction: column;
   box-shadow: 0px 3px 10px #0000001a;
   border-radius: 10px;
-  opacity: 1;
+  margin-bottom: 1rem;
+  max-width: 343px;
   &-header {
     display: flex;
     justify-content: space-around;
@@ -56,7 +57,7 @@
 .mask {
   color: $white;
   border-radius: 10px;
-  width: 150px;
+  width: 48%;
   overflow: hidden;
   &-nums {
     strong {

@@ -32,7 +32,7 @@
       <p>
         <span class="label-open"></span>
         <span class="title">{{pharmacy.name}}</span>
-        <small>{{getDistance(coordinate)}}KM</small>
+        <small>{{distanceToPharmacy}}KM</small>
       </p>
       <p>
         <span class="subtitle">地址</span>
@@ -57,11 +57,9 @@
 <script>
 export default {
   name: 'PharmacyCard',
-  props: ['pharmacy', 'geometry'],
+  props: ['pharmacy', 'distanceToPharmacy'],
   data() {
     return {
-      coordinate: this.geometry,
-      myLatAndLong: [],
       publicPath: process.env.BASE_URL,
       googleSearch: 'https://www.google.com/maps/search/?api=1&query=',
     };
@@ -92,45 +90,7 @@ export default {
     crateGoogleSearchUrl(name, address) {
       return `${this.googleSearch}${name}+${address}`;
     },
-    getDistance(geometry) {
-      function radius(d) {
-        return (d * Math.PI) / 180.0;
-      }
-      const r = 6371;
-      const lat0 = radius(this.myLatAndLong[1]);
-      const lat1 = radius(geometry[1]);
-      const lat = lat0 - lat1;
-      const long = radius(this.myLatAndLong[0]) - radius(geometry[0]);
-      const a = Math.sin(lat / 2) * Math.sin(lat / 2)
-          + Math.sin(long / 2)
-          * Math.sin(long / 2)
-          * Math.cos(lat0)
-          * Math.cos(lat1);
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      const distance = (r * c).toFixed(1);
-      return distance;
-    },
-    getMyPosition() {
-      const self = this;
-      function success(position) {
-        const {
-          coords: { longitude: long },
-        } = position;
-        const {
-          coords: { latitude: lat },
-        } = position;
-        self.myLatAndLong.push(long);
-        self.myLatAndLong.push(lat);
-      }
-      function error() {
-        console.log('Can not get your location!');
-      }
-      navigator.geolocation.getCurrentPosition(success, error);
-    },
   },
   computed: {},
-  mounted() {
-    this.getMyPosition();
-  },
 };
 </script>

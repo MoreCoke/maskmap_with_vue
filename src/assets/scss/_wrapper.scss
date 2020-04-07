@@ -1,0 +1,72 @@
+.wrapper {
+  padding: 0 1rem;
+  &-select {
+    border: 1px solid $stock-none;
+    padding: 11px 1rem;
+    margin-bottom: 1rem;
+    color: $primary;
+    font-size: 1rem;
+    background-color: $white;
+    border-radius: 10px;
+    width: 100%;
+    @include topic-font;
+  }
+  &-search {
+    display: flex;
+    align-items: center;
+    background-color: $white;
+    color: $primary;
+    border-radius: 10px;
+    border: 1px solid $stock-none;
+    font-size: 1.5rem;
+    padding: 11px 1rem;
+    margin-bottom: 1rem;
+    margin-left: auto;
+    margin-right: auto;
+    font-weight: bold;
+    cursor: pointer;
+    @include topic-font;
+    &:hover {
+      background-color: $stock-few;
+      transition: all 0.2s ease-in-out;
+    }
+  }
+}
+
+.purchase-day {
+  margin-bottom: 1rem;
+  span {
+    margin-right: 0.5rem;
+    font-size: 2.25rem;
+    color: $primary;
+    font-weight: bold;
+  }
+  
+}
+.updated-info{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  p {
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    color: $detail;
+  }
+  button{
+    font-size: 14px;
+    width: 96px;
+    height: 36px;
+    border: 2px solid $primary;
+    border-radius: 100px;
+    background-color: transparent;
+    color: $primary;
+    cursor: pointer;
+    transition: all 0.5s ease-in-out;
+    @include topic-font;
+    &:hover{
+      color: $white;
+      background-color: $primary;
+      transition: all 0.5s ease-in-out;
+    }
+  }
+}

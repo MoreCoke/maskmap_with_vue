@@ -2,16 +2,39 @@
   background-color: $white;
   padding: 1rem;
   margin-bottom: 1rem;
-  transition: background-color .5s ease;
+  transition: background-color 0.5s ease-in-out;
   &.active {
     background-color: $primary;
     color: $white;
-    span{
+    span {
       color: $white;
     }
-    .navbar-list{
-      display: block;
-      // transition: background-color .5s ease;
+    .navbar-list {
+      height: 80px;
+      transition: background-color 0.5s ease-in-out, height 0.5s ease-in-out;
+    }
+    .navbar-toggler {
+      transition: all 0.5s ease;
+      &::before {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 2px;
+        width: 22px;
+        height: 3px;
+        background-color: $white;
+        transform: rotate(45deg);
+      }
+      &::after {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 2px;
+        width: 22px;
+        height: 3px;
+        background-color: $white;
+        transform: rotate(-45deg);
+      }
     }
   }
   @include respond-up(ipad) {
@@ -19,12 +42,15 @@
     align-items: center;
   }
   &-list {
-    display: none;
+    height: 0;
+    overflow: hidden;
+    transition: all 0.5s ease-in-out;
     li {
       text-align: center;
       margin: 1rem auto;
     }
     @include respond-up(ipad) {
+      height: auto;
       margin-left: auto;
       display: flex;
       align-items: center;
@@ -37,12 +63,29 @@
   &-toggler {
     width: 26px;
     height: 24px;
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
+    padding: 0;
     border: none;
     background-color: transparent;
     margin-left: auto;
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      width: 22px;
+      height: 3px;
+      background-color: $primary;
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      top: 10px;
+      left: 13px;
+      width: 11px;
+      height: 3px;
+      background-color: $primary;
+    }
     @include respond-up(ipad) {
       display: none;
     }
