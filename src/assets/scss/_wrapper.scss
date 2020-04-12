@@ -1,5 +1,12 @@
 .wrapper {
+  display: flex;
+  // justify-content: space-between;
   padding: 0 1rem;
+  &-sidebar {
+    position: relative;
+    @include respond-up(ipad) {
+    }
+  }
   &-select {
     border: 1px solid $stock-none;
     padding: 11px 1rem;
@@ -10,6 +17,20 @@
     border-radius: 10px;
     width: 100%;
     @include topic-font;
+    &::-webkit-scrollbar {
+      width: 10px;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $close;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      border-radius: 10px;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+    }
   }
   &-search {
     display: flex;
@@ -41,9 +62,11 @@
     color: $primary;
     font-weight: bold;
   }
-  
+  img {
+    cursor: pointer;
+  }
 }
-.updated-info{
+.updated-info {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.25rem;
@@ -52,7 +75,7 @@
     line-height: 1.25rem;
     color: $detail;
   }
-  button{
+  button {
     font-size: 14px;
     width: 96px;
     height: 36px;
@@ -63,10 +86,104 @@
     cursor: pointer;
     transition: all 0.5s ease-in-out;
     @include topic-font;
-    &:hover{
+    &:hover {
       color: $white;
       background-color: $primary;
       transition: all 0.5s ease-in-out;
     }
+  }
+}
+.read-more {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding-top: 1.5rem;
+  p {
+    margin-bottom: 0.75rem;
+    font-size: 0.75rem;
+    color: $primary;
+  }
+  button {
+    background-color: $primary;
+    color: $white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 23px;
+    padding: 0.75rem;
+    width: 152px;
+    height: 46px;
+    margin: auto;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0px 0px 5px $close;
+    &:hover {
+      background-color: darken($primary, 10%);
+    }
+  }
+}
+.scroll-up {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border: none;
+  border-radius: 100px;
+  outline: none;
+  background-color: $primary;
+  color: $white;
+  box-shadow: 0px 0px 5px $close;
+  // position: fixed;
+  left: 80%;
+  bottom: 3rem;
+  cursor: pointer;
+  @include respond-up(ipad) {
+    bottom: 3rem;
+  }
+  &:hover {
+    background-color: darken($primary, 10%);
+  }
+}
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 100;
+  background-color: rgba($primary, 0.7);
+  display: none;
+  &.active {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  &-popup {
+    // position: fixed;
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    // top: 50%;
+    // left: 50%;
+    width: 300px;
+    height: 300px;
+    // margin-left: -150px;
+    // margin-top: -150px;
+    @include respond-up(phone) {
+      width: 600px;
+      height: 600px;
+      // margin-left: -300px;
+      // margin-top: -300px;
+    }
+  }
+  &-close {
+    position: absolute;
+    top: 10px;
+    left: calc(100% - 34px);
+    background-color: transparent;
+    border: none;
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
   }
 }

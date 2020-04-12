@@ -7,7 +7,7 @@
     </div>
     <ul class="navbar-list">
       <li>口罩供給現況</li>
-      <li>口罩怎麼買</li>
+      <li @click="handleEmitModel">口罩怎麼買</li>
     </ul>
   </nav>
 </template>
@@ -23,6 +23,9 @@ export default {
   methods: {
     toggleNavList() {
       this.isActive = !this.isActive;
+    },
+    handleEmitModel() {
+      this.$bus.$emit('modalActive');
     },
   },
   computed: {

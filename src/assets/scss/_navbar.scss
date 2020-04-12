@@ -48,6 +48,7 @@
     li {
       text-align: center;
       margin: 1rem auto;
+      cursor: pointer;
     }
     @include respond-up(ipad) {
       height: auto;
@@ -94,6 +95,7 @@
 .logo {
   display: flex;
   align-items: center;
+  cursor: pointer;
   span {
     margin-left: 0.5rem;
     color: $primary;

@@ -1,71 +1,89 @@
 <template>
   <div class="wrapper">
-    <select
-      class="wrapper-select"
-      name="county"
-      v-model="selectedCounty"
-      @change="filterSelectCountyAndTownPharmacy(selectedCounty)"
-    >
-      <option v-for="item in getCity" :key="item" :value="item">{{item}}</option>
-    </select>
-    <select
-      class="wrapper-select"
-      name="city"
-      v-model="selectedTown"
-      @change="filterSelectCountyAndTownPharmacy(selectedCounty,selectedTown)"
-    >
-      <option v-for="item in getCertainCounty" :key="item" :value="item">{{item}}</option>
-    </select>
-    <button class="wrapper-search" @click="filterNearestPharmacy">
-      <span class="mr-2">搜尋最近的藥局</span>
-      <img :src="locationIconUrl" alt />
-    </button>
-    <div class="purchase-day">
-      <span>不限日皆可購買</span>
-      <img :src="helpIconUrl" alt />
+    <div class="wrapper-sidebar">
+      <select
+        class="wrapper-select"
+        name="county"
+        v-model="selectedCounty"
+        @change="filterSelectCountyAndTownPharmacy(selectedCounty)"
+      >
+        <option v-for="item in getCity" :key="item" :value="item">{{item}}</option>
+      </select>
+      <select
+        class="wrapper-select"
+        name="city"
+        v-model="selectedTown"
+        @change="filterSelectCountyAndTownPharmacy(selectedCounty,selectedTown)"
+      >
+        <option v-for="item in getCertainCounty" :key="item" :value="item">{{item}}</option>
+      </select>
+      <button class="wrapper-search" @click="filterNearestPharmacy">
+        <span class="mr-2">搜尋最近的藥局</span>
+        <img :src="locationIconUrl" alt />
+      </button>
+      <div class="purchase-day">
+        <span>不限日皆可購買</span>
+        <img :src="helpIconUrl" @click="toggleModal" />
+      </div>
+      <div class="updated-info">
+        <p v-if="maskData[0]">
+          資訊更新時間{{getUpdateTime}}
+          <i class="fas fa-cog fa-spin" v-if="isLoading"></i>
+        </p>
+        <button @click="getData">重整列表</button>
+      </div>
+      <div class="card-list" ref="cardList">
+        <PharmacyCard
+          v-for="(item,index) in renderMaskData"
+          :key="index"
+          :pharmacy="item.properties"
+          :distanceToPharmacy="item.distanceToPharmacy"
+        ></PharmacyCard>
+      </div>
+      <div v-if="getTheRestPharmacyCardNum > 0" class="read-more">
+        <p>尚有 {{getTheRestPharmacyCardNum}} 筆</p>
+        <button @click="renderPharmacyCard(3)">我要看更多</button>
+      </div>
+      <button class="scroll-up" @click="scrollTop">TOP</button>
+      <div class="modal" :class="{active:isActive}">
+        <div class="modal-popup" :style="{backgroundImage:`url(${maskInfoImgUrl})`}">
+          <button
+            class="modal-close"
+            :style="{backgroundImage:`url(${closeIconUrl})`}"
+            @click="toggleModal"
+          ></button>
+        </div>
+      </div>
     </div>
-    <div class="updated-info">
-      <p v-if="maskData[0]">
-        距離方圓 1公里 以內的供應商
-        <br />
-        資訊更新時間{{getUpdateTime}}
-        <i class="fas fa-cog fa-spin" v-if="isLoading"></i>
-      </p>
-      <button @click="getData">重整列表</button>
-    </div>
-    <template v-if="maskData[0]">
-      <PharmacyCard
-        v-for="(item,index) in renderMaskData"
-        :key="index"
-        :pharmacy="item.properties"
-        :distanceToPharmacy="item.distanceToPharmacy"
-      ></PharmacyCard>
-    </template>
-    <div v-if="getTheRestPharmacyCardNum > 0">
-      <button @click="renderPharmacyCard(3)">我要看更多</button>
-      <p>目前共剩{{getTheRestPharmacyCardNum}}筆</p>
-    </div>
+    <Map2 v-if="filterMaskData[0]" :myPosition="myLatAndLong" :pharmacyPosition="filterMaskData"></Map2>
   </div>
 </template>
 <script>
 import PharmacyCard from './PharmacyCard.vue';
+import Map2 from './Map2.vue';
 import CityData from '../assets/CityCountyData.json';
 
 export default {
   name: 'Wrapper',
   components: {
     PharmacyCard,
+    Map2,
   },
   data() {
     return {
       publicPath: process.env.BASE_URL,
-      locationIcon: 'icon/ic_location@2x.png',
-      helpIcon: 'icon/ic_help@2x.png',
+      maskIcon: {
+        locationIcon: 'icon/ic_location@2x.png',
+        helpIcon: 'icon/ic_help@2x.png',
+        maskInfoImg: 'icon/maskinfo.jpg',
+        closeIcon: 'icon/ic_close@2x.png',
+      },
       myLatAndLong: [],
       cityCountyArr: CityData,
       selectedCounty: '臺北市',
       selectedTown: '中正區',
       isLoading: false,
+      isActive: false,
       maskData: [],
       filterMaskData: [],
       renderMaskData: [],
@@ -82,7 +100,8 @@ export default {
       this.axios.get(maskUrl).then(response => {
         this.maskData = response.data.features;
         this.maskData.forEach(element => {
-          // eslint-disable-next-line no-param-reassign
+          /* eslint-disable no-param-reassign */
+          [element.geometry.coordinates[0], element.geometry.coordinates[1]] = [element.geometry.coordinates[1], element.geometry.coordinates[0]];
           element.distanceToPharmacy = this.getDistanceToPharmacy(element.geometry.coordinates);
         });
         this.filterSelectCountyAndTownPharmacy(this.selectedCounty, this.selectedTown);
@@ -99,8 +118,8 @@ export default {
         const {
           coords: { latitude: lat },
         } = position;
-        self.myLatAndLong.push(long);
         self.myLatAndLong.push(lat);
+        self.myLatAndLong.push(long);
       }
       function error() {
         console.log('Can not get your location!');
@@ -115,10 +134,10 @@ export default {
       // 如果允許定位
       if (this.myLatAndLong[0]) {
         const r = 6371;
-        const lat0 = radius(this.myLatAndLong[1]);
-        const lat1 = radius(pharmacyGeometry[1]);
+        const lat0 = radius(this.myLatAndLong[0]);
+        const lat1 = radius(pharmacyGeometry[0]);
         const lat = lat0 - lat1;
-        const long = radius(this.myLatAndLong[0]) - radius(pharmacyGeometry[0]);
+        const long = radius(this.myLatAndLong[1]) - radius(pharmacyGeometry[1]);
         const a = Math.sin(lat / 2) * Math.sin(lat / 2) + Math.sin(long / 2) * Math.sin(long / 2) * Math.cos(lat0) * Math.cos(lat1);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
         const distance = (r * c).toFixed(1);
@@ -126,9 +145,10 @@ export default {
       }
       return '?? ';
     },
-    // 尋找離家近的藥局
+    // 尋找離家近的藥局( 由近到遠 )
     filterNearestPharmacy() {
       this.filterMaskData = this.maskData.filter(element => element.distanceToPharmacy <= 1);
+      this.filterMaskData.sort((a, b) => a.distanceToPharmacy - b.distanceToPharmacy);
       this.initializePharmacyCard();
       this.renderPharmacyCard();
     },
@@ -156,13 +176,25 @@ export default {
       this.totalFilterPharmacyCard = this.filterMaskData.length;
       this.maxPharmacyCard = 3; // 初始化
     },
+    scrollTop() {
+      this.$refs.cardList.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+    toggleModal() {
+      this.isActive = !this.isActive;
+    },
   },
   computed: {
     locationIconUrl() {
-      return this.publicPath + this.locationIcon;
+      return this.publicPath + this.maskIcon.locationIcon;
     },
     helpIconUrl() {
-      return this.publicPath + this.helpIcon;
+      return this.publicPath + this.maskIcon.helpIcon;
+    },
+    closeIconUrl() {
+      return this.publicPath + this.maskIcon.closeIcon;
+    },
+    maskInfoImgUrl() {
+      return this.publicPath + this.maskIcon.maskInfoImg;
     },
     // 取得 select 的縣市 option
     getCity() {
@@ -188,6 +220,9 @@ export default {
       }
       return restNum;
     },
+  },
+  created() {
+    this.$bus.$on('modalActive', this.toggleModal);
   },
   mounted() {
     this.getData();
