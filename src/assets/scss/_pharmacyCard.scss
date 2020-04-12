@@ -5,6 +5,26 @@
   border-radius: 10px;
   margin-bottom: 1rem;
   max-width: 343px;
+  &-list {
+    @include respond-up(ipad) {
+      overflow: auto;
+      height: calc(100vh - 555px);
+    }
+    &::-webkit-scrollbar {
+      width: 10px;
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-track {
+      background: $close;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: $primary;
+      border-radius: 10px;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
+    }
+  }
   &-header {
     display: flex;
     justify-content: space-around;
@@ -16,22 +36,24 @@
       color: $stock-none;
       margin-bottom: 14px;
       position: relative;
-      .label-open,.label-almost-close,.label-close{
+      .label-open,
+      .label-almost-close,
+      .label-close {
         position: absolute;
         width: 4px;
         height: 1.5rem;
         border-radius: 0px 4px 4px 0px;
-        left:-.75rem;
+        left: -0.75rem;
         bottom: 0;
         transform: translateY(20%);
       }
-      .label-open{
+      .label-open {
         background-color: $open;
       }
-      .label-almost-close{
+      .label-almost-close {
         background-color: $almost-close;
       }
-      .label-close{
+      .label-close {
         background-color: $close;
       }
       .title,

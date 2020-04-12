@@ -26,9 +26,12 @@
         <img :src="helpIconUrl" @click="toggleModal" />
       </div>
       <div class="updated-info">
-        <p v-if="maskData[0]">
-          資訊更新時間{{getUpdateTime}}
+        <p>
+          * 搜尋最近藥局時，
+          <br />只會顯示方圓1公里內的藥局
           <i class="fas fa-cog fa-spin" v-if="isLoading"></i>
+          <br />
+          <span v-if="maskData[0]">資訊更新時間{{getUpdateTime}}</span>
         </p>
         <button @click="getData">重整列表</button>
       </div>
@@ -55,7 +58,12 @@
         </div>
       </div>
     </div>
-    <Map2 v-if="filterMaskData[0]" :myPosition="myLatAndLong" :pharmacyPosition="filterMaskData"></Map2>
+    <Map2
+      v-if="filterMaskData[0]"
+      :myPosition="myLatAndLong"
+      :pharmacyPosition="filterMaskData"
+      :isMyPosition="setMyPositionMarker"
+    ></Map2>
   </div>
 </template>
 <script>
@@ -84,6 +92,7 @@ export default {
       selectedTown: '中正區',
       isLoading: false,
       isActive: false,
+      setMyPositionMarker: false,
       maskData: [],
       filterMaskData: [],
       renderMaskData: [],
@@ -122,7 +131,7 @@ export default {
         self.myLatAndLong.push(long);
       }
       function error() {
-        console.log('Can not get your location!');
+        alert('請允許存取位置，並重新整理網頁!');
       }
       navigator.geolocation.getCurrentPosition(success, error);
     },
@@ -147,19 +156,25 @@ export default {
     },
     // 尋找離家近的藥局( 由近到遠 )
     filterNearestPharmacy() {
-      this.filterMaskData = this.maskData.filter(element => element.distanceToPharmacy <= 1);
-      this.filterMaskData.sort((a, b) => a.distanceToPharmacy - b.distanceToPharmacy);
-      this.initializePharmacyCard();
-      this.renderPharmacyCard();
+      if (this.myLatAndLong[0]) {
+        this.setMyPositionMarker = true;
+        this.filterMaskData = this.maskData.filter(element => element.distanceToPharmacy <= 1);
+        this.filterMaskData.sort((a, b) => a.distanceToPharmacy - b.distanceToPharmacy);
+        this.initializePharmacyCardNum();
+        this.renderPharmacyCard();
+      } else {
+        this.getMyPosition();
+      }
     },
     // 尋找表單選擇的地區藥局
     filterSelectCountyAndTownPharmacy(county, town) {
+      this.setMyPositionMarker = false;
       if (town) {
         this.filterMaskData = this.maskData.filter(element => element.properties.county === county && element.properties.town === town);
       } else {
         this.filterMaskData = this.maskData.filter(element => element.properties.county === county);
       }
-      this.initializePharmacyCard();
+      this.initializePharmacyCardNum();
       this.renderPharmacyCard();
     },
     // 渲染卡片
@@ -172,7 +187,7 @@ export default {
       this.renderMaskData = this.filterMaskData.slice(0, this.maxPharmacyCard);
     },
     // 更新地區的藥局數量
-    initializePharmacyCard() {
+    initializePharmacyCardNum() {
       this.totalFilterPharmacyCard = this.filterMaskData.length;
       this.maxPharmacyCard = 3; // 初始化
     },

@@ -37,6 +37,6 @@ body {
 }
 .wrapper {
   flex: 1;
-  margin: auto;
+  // margin: auto;
 }
 </style>

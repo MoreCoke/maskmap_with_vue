@@ -61,25 +61,24 @@ export default {
   data() {
     return {
       publicPath: process.env.BASE_URL,
-      googleSearch: 'https://www.google.com/maps/search/?api=1&query=',
+      adultMaskStatus: null,
+      childMaskStatus: null,
     };
   },
   methods: {
     handleMaskRender(maskNums) {
       let maskSatus;
-      if (maskNums > 100) {
+      if (maskNums >= 100) {
         maskSatus = {
           bgc: 'bg-stock-full',
           url: `${this.publicPath}icon/ic_stock_full@2x@2x.png`,
         };
-      }
-      if (maskNums > 0 && maskNums < 100) {
+      } else if (maskNums > 0 && maskNums < 100) {
         maskSatus = {
           bgc: 'bg-stock-few',
           url: `${this.publicPath}icon/ic_stock_few@2x@2x.png`,
         };
-      }
-      if (maskNums === 0) {
+      } else {
         maskSatus = {
           bgc: 'bg-stock-none',
           url: `${this.publicPath}icon/ic_stock_none@2x@2x.png`,
@@ -88,9 +87,9 @@ export default {
       return maskSatus;
     },
     crateGoogleSearchUrl(name, address) {
-      return `${this.googleSearch}${name}+${address}`;
+      const googleSearch = 'https://www.google.com/maps/search/?api=1&query=';
+      return `${googleSearch}${name}+${address}`;
     },
   },
-  computed: {},
 };
 </script>

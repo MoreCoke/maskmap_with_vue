@@ -5,6 +5,7 @@
   &-sidebar {
     position: relative;
     @include respond-up(ipad) {
+      flex: 0 0 330px;
     }
   }
   &-select {
