@@ -17,7 +17,7 @@
       >
         <option v-for="item in getCertainCounty" :key="item" :value="item">{{item}}</option>
       </select>
-      <button class="wrapper-search" @click="filterNearestPharmacy">
+      <button class="wrapper-search" @click.stop="filterNearestPharmacy">
         <span class="mr-2">搜尋最近的藥局</span>
         <img :src="locationIconUrl" alt />
       </button>
@@ -39,7 +39,7 @@
         <PharmacyCard
           v-for="(item,index) in renderMaskData"
           :key="index"
-          :pharmacy="item.properties"
+          :pharmacy="item"
           :distanceToPharmacy="item.distanceToPharmacy"
         ></PharmacyCard>
       </div>
@@ -179,11 +179,12 @@ export default {
     },
     // 渲染卡片
     renderPharmacyCard(plus = 0) {
-      const filterMaskLength = this.filterMaskData.length;
       this.maxPharmacyCard += plus;
-      if (this.maxPharmacyCard > filterMaskLength) {
-        this.maxPharmacyCard = filterMaskLength;
+      // 如果渲染卡片數量的最大值超過資料數量的最大值，就將渲染數調整成資料數量
+      if (this.maxPharmacyCard > this.totalFilterPharmacyCard) {
+        this.maxPharmacyCard = this.totalFilterPharmacyCard;
       }
+      // 利用slice處理要渲染在card list 中的卡片數量
       this.renderMaskData = this.filterMaskData.slice(0, this.maxPharmacyCard);
     },
     // 更新地區的藥局數量
@@ -191,9 +192,11 @@ export default {
       this.totalFilterPharmacyCard = this.filterMaskData.length;
       this.maxPharmacyCard = 3; // 初始化
     },
+    // 利用 ref 操作 DOM 做出回到最上方的按鈕
     scrollTop() {
       this.$refs.cardList.scrollTo({ top: 0, behavior: 'smooth' });
     },
+    // 操控 Modal 的顯示
     toggleModal() {
       this.isActive = !this.isActive;
     },
@@ -237,6 +240,7 @@ export default {
     },
   },
   created() {
+    // 接收從 Navbar 組件傳來的資料
     this.$bus.$on('modalActive', this.toggleModal);
   },
   mounted() {

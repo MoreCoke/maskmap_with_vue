@@ -1,11 +1,11 @@
 .wrapper {
   display: flex;
-  // justify-content: space-between;
+  justify-content: center;
   padding: 0 1rem;
   &-sidebar {
     position: relative;
     @include respond-up(ipad) {
-      flex: 0 0 330px;
+      flex: 0 0 350px;
     }
   }
   &-select {
@@ -96,8 +96,11 @@
 }
 .read-more {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   padding-top: 1.5rem;
+  @include respond-up(ipad){
+    margin-bottom: 1.8rem;
+  }
   p {
     margin-bottom: 0.75rem;
     font-size: 0.75rem;
@@ -133,10 +136,10 @@
   box-shadow: 0px 0px 5px $close;
   // position: fixed;
   left: 80%;
-  bottom: 3rem;
+  bottom: 2rem;
   cursor: pointer;
-  @include respond-up(ipad) {
-    bottom: 3rem;
+  @include respond-up(ipad){
+    bottom: 1.8rem;
   }
   &:hover {
     background-color: darken($primary, 10%);

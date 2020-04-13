@@ -1,29 +1,32 @@
 <template>
-  <div class="card p-3">
+  <div class="card p-3" @click.stop="searchPharmacyClick">
     <div class="card-header">
-      <div class="mask px-3 py-4 mr-4" :class="handleMaskRender(pharmacy.mask_adult).bgc">
+      <div
+        class="mask px-3 py-4 mr-4"
+        :class="handleMaskRender(pharmacy.properties.mask_adult).bgc"
+      >
         <div class="mb-2">成人口罩數量</div>
         <div class="mask-info">
           <div class="mask-nums">
-            <strong>{{pharmacy.mask_adult}}</strong>
+            <strong>{{pharmacy.properties.mask_adult}}</strong>
             <span>片</span>
           </div>
           <div
             class="mask-icon"
-            :style="{ backgroundImage: `url(${handleMaskRender(pharmacy.mask_adult).url})` }"
+            :style="{ backgroundImage: `url(${handleMaskRender(pharmacy.properties.mask_adult).url})` }"
           ></div>
         </div>
       </div>
-      <div class="mask px-3 py-4" :class="handleMaskRender(pharmacy.mask_child).bgc">
+      <div class="mask px-3 py-4" :class="handleMaskRender(pharmacy.properties.mask_child).bgc">
         <div class="mb-2">兒童口罩數量</div>
         <div class="mask-info">
           <div class="mask-nums">
-            <strong>{{pharmacy.mask_child}}</strong>
+            <strong>{{pharmacy.properties.mask_child}}</strong>
             <span>片</span>
           </div>
           <div
             class="mask-icon"
-            :style="{ backgroundImage: `url(${handleMaskRender(pharmacy.mask_child).url})` }"
+            :style="{ backgroundImage: `url(${handleMaskRender(pharmacy.properties.mask_child).url})` }"
           ></div>
         </div>
       </div>
@@ -31,25 +34,25 @@
     <div class="card-content">
       <p>
         <span class="label-open"></span>
-        <span class="title">{{pharmacy.name}}</span>
+        <span class="title">{{pharmacy.properties.name}}</span>
         <small>{{distanceToPharmacy}}KM</small>
       </p>
       <p>
         <span class="subtitle">地址</span>
-        {{pharmacy.address}}
+        {{pharmacy.properties.address}}
         <a
-          :href="crateGoogleSearchUrl(pharmacy.name,pharmacy.address)"
+          :href="createGoogleSearchUrl(pharmacy.properties.name,pharmacy.properties.address)"
           target="_blank"
         >於地圖查看</a>
       </p>
       <p>
         <span class="subtitle">電話</span>
-        {{pharmacy.phone}}
-        <a :href="`tel:${pharmacy.phone}`">撥打電話</a>
+        {{pharmacy.properties.phone}}
+        <a :href="`tel:${pharmacy.properties.phone}`">撥打電話</a>
       </p>
       <p>
         <span class="subtitle">備註</span>
-        {{pharmacy.note}}
+        {{pharmacy.properties.note}}
       </p>
     </div>
   </div>
@@ -63,6 +66,7 @@ export default {
       publicPath: process.env.BASE_URL,
       adultMaskStatus: null,
       childMaskStatus: null,
+      pharmacyLatAndLong: this.pharmacy.geometry.coordinates,
     };
   },
   methods: {
@@ -86,9 +90,12 @@ export default {
       }
       return maskSatus;
     },
-    crateGoogleSearchUrl(name, address) {
+    createGoogleSearchUrl(name, address) {
       const googleSearch = 'https://www.google.com/maps/search/?api=1&query=';
       return `${googleSearch}${name}+${address}`;
+    },
+    searchPharmacyClick() {
+      this.$bus.$emit('pharmacyLatAndLong', this.pharmacyLatAndLong);
     },
   },
 };
