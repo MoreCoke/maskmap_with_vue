@@ -6,8 +6,6 @@
 
 <script>
 import L from 'leaflet';
-// import LMarkerCluster from 'leaflet.markercluster';
-// import LMarkerCluster from 'vue2-leaflet-markercluster';
 
 /* eslint-disable global-require */
 // eslint-disable-next-line no-underscore-dangle
@@ -18,13 +16,9 @@ L.Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 });
 
-// console.log(L);
 export default {
   name: 'Map2',
   props: ['myPosition', 'pharmacyPosition', 'isMyPosition'],
-  components: {
-    // LMarkerCluster,
-  },
   data() {
     return {
       publicPath: process.env.BASE_URL,
@@ -139,12 +133,10 @@ export default {
   created() {
     this.$bus.$on('pharmacyLatAndLong', pharmacyLatAndLong => {
       this.lMap.setView(pharmacyLatAndLong, 20);
-      console.log('execute', pharmacyLatAndLong);
       this.lMarker.forEach(element => {
         const markerLatLong = element.getLatLng();
         if (markerLatLong.lat === pharmacyLatAndLong[0] && markerLatLong.lng === pharmacyLatAndLong[1]) {
           this.lMarkerClusterGroup.zoomToShowLayer(element, () => element.openPopup());
-          console.log('success');
         }
       });
     });

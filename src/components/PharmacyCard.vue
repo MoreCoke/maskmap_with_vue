@@ -94,8 +94,16 @@ export default {
       const googleSearch = 'https://www.google.com/maps/search/?api=1&query=';
       return `${googleSearch}${name}+${address}`;
     },
+    // 維持 prop 的單向數據流 ，利用 watch 更新 pharmacyLatAndLong，
+    // 而非直接將 prop 資料 this.pharmacy.geometry.coordinates 直接用 event bus 傳出
+    // 避免 prop 可能不小心被其他 function 修改，導致 Vue 跳錯
     searchPharmacyClick() {
       this.$bus.$emit('pharmacyLatAndLong', this.pharmacyLatAndLong);
+    },
+  },
+  watch: {
+    pharmacy() {
+      this.pharmacyLatAndLong = this.pharmacy.geometry.coordinates;
     },
   },
 };
