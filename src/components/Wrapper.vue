@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper">
+    <Loading v-show="openIsLoading" :class="{fade:openIsLoading}"></Loading>
     <div class="wrapper-sidebar">
       <select
         class="wrapper-select"
@@ -29,7 +30,7 @@
         <p>
           * 搜尋最近藥局時，
           <br />只會顯示方圓1公里內的藥局
-          <i class="fas fa-cog fa-spin" v-if="isLoading"></i>
+          <i class="fas fa-cog fa-spin" v-if="dataIsLoading"></i>
           <br />
           <span v-if="maskData[0]">資訊更新時間{{getUpdateTime}}</span>
         </p>
@@ -48,7 +49,7 @@
         <button @click="renderPharmacyCard(3)">我要看更多</button>
       </div>
       <button class="scroll-up" @click="scrollTop">TOP</button>
-      <div class="modal" :class="{active:isActive}">
+      <div class="modal" :class="{active:modalIsActive}">
         <div class="modal-popup" :style="{backgroundImage:`url(${maskInfoImgUrl})`}">
           <button
             class="modal-close"
@@ -69,6 +70,7 @@
 <script>
 import PharmacyCard from './PharmacyCard.vue';
 import Map2 from './Map2.vue';
+import Loading from './Loading.vue';
 import CityData from '../assets/CityCountyData.json';
 
 export default {
@@ -76,6 +78,7 @@ export default {
   components: {
     PharmacyCard,
     Map2,
+    Loading,
   },
   data() {
     return {
@@ -90,8 +93,9 @@ export default {
       cityCountyArr: CityData,
       selectedCounty: '臺北市',
       selectedTown: '中正區',
-      isLoading: false,
-      isActive: false,
+      dataIsLoading: false,
+      modalIsActive: false,
+      openIsLoading: true,
       setMyPositionMarker: false,
       maskData: [],
       filterMaskData: [],
@@ -104,9 +108,13 @@ export default {
     // 取得口罩資料
     getData() {
       const maskUrl = 'https://raw.githubusercontent.com/kiang/pharmacies/master/json/points.json?fbclid=IwAR1dnONo5ndjbYoiQOHymhawhbnRDFKmWVjQT4A5gV5Wo4zccyBvp0peAgk';
-      this.isLoading = true;
+      this.dataIsLoading = true;
       this.maxPharmacyCard = 3;
       this.axios.get(maskUrl).then(response => {
+        // 避免按重整列表時 openLoading也跳出來
+        if (!this.maskData[0]) {
+          this.displayNoneLater();
+        }
         this.maskData = response.data.features;
         this.maskData.forEach(element => {
           /* eslint-disable no-param-reassign */
@@ -114,7 +122,7 @@ export default {
           element.distanceToPharmacy = this.getDistanceToPharmacy(element.geometry.coordinates);
         });
         this.filterSelectCountyAndTownPharmacy(this.selectedCounty, this.selectedTown);
-        this.isLoading = false;
+        this.dataIsLoading = false;
       });
     },
     // 取得現在定位
@@ -198,7 +206,13 @@ export default {
     },
     // 操控 Modal 的顯示
     toggleModal() {
-      this.isActive = !this.isActive;
+      this.modalIsActive = !this.modalIsActive;
+    },
+    // 開頭載入動畫，動畫時間共5秒，載入資料時間給個1秒，所以 setTimeout 設個 4秒
+    displayNoneLater() {
+      setTimeout(() => {
+        this.openIsLoading = false;
+      }, 4000);
     },
   },
   computed: {
@@ -246,6 +260,7 @@ export default {
   mounted() {
     this.getData();
     this.getMyPosition();
+    // this.displayNoneLater();
   },
 };
 </script>
