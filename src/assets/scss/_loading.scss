@@ -9,10 +9,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: $primary;
+  background-color: rgba($primary, 0.8);
   &.fade {
     animation: fade 2s ease-out;
     animation-delay: 3s;
+    display: flex;
   }
   &-title {
     color: $white;
@@ -67,8 +68,13 @@
 @keyframes fade {
   0% {
     opacity: 1;
+    display: flex;
+  }
+  99% {
+    display: flex;
+    opacity: 0;
   }
   100% {
-    opacity: 0;
+    display: none;
   }
 }

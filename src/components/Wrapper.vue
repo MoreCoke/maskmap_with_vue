@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <Loading v-show="openIsLoading" :class="{fade:openIsLoading}"></Loading>
+    <Loading v-show="openIsLoading"></Loading>
     <div class="wrapper-sidebar">
       <select
         class="wrapper-select"
@@ -208,7 +208,7 @@ export default {
     toggleModal() {
       this.modalIsActive = !this.modalIsActive;
     },
-    // 開頭載入動畫，動畫時間共5秒，載入資料時間給個1秒，所以 setTimeout 設個 4秒
+    // 開頭載入動畫，設定延遲
     displayNoneLater() {
       setTimeout(() => {
         this.openIsLoading = false;
