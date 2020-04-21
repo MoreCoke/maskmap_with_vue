@@ -35,7 +35,7 @@
       <p>
         <span class="label-open"></span>
         <span class="title">{{pharmacy.properties.name}}</span>
-        <small>{{distanceToPharmacy}}KM</small>
+        <small>{{pharmacy.distanceToPharmacy}}KM</small>
       </p>
       <p>
         <span class="subtitle">地址</span>
@@ -60,12 +60,10 @@
 <script>
 export default {
   name: 'PharmacyCard',
-  props: ['pharmacy', 'distanceToPharmacy'],
+  props: ['pharmacy'],
   data() {
     return {
       publicPath: process.env.BASE_URL,
-      adultMaskStatus: null,
-      childMaskStatus: null,
       pharmacyLatAndLong: this.pharmacy.geometry.coordinates,
     };
   },
@@ -94,16 +92,11 @@ export default {
       const googleSearch = 'https://www.google.com/maps/search/?api=1&query=';
       return `${googleSearch}${name}+${address}`;
     },
-    // 維持 prop 的單向數據流 ，利用 watch 更新 pharmacyLatAndLong，
+    // 維持 prop 的單向數據流
     // 而非直接將 prop 資料 this.pharmacy.geometry.coordinates 直接用 event bus 傳出
     // 避免 prop 可能不小心被其他 function 修改，導致 Vue 跳錯
     searchPharmacyClick() {
       this.$bus.$emit('pharmacyLatAndLong', this.pharmacyLatAndLong);
-    },
-  },
-  watch: {
-    pharmacy() {
-      this.pharmacyLatAndLong = this.pharmacy.geometry.coordinates;
     },
   },
 };

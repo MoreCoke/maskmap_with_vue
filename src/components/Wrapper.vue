@@ -38,10 +38,9 @@
       </div>
       <div class="card-list" ref="cardList">
         <PharmacyCard
-          v-for="(item,index) in renderMaskData"
-          :key="index"
+          v-for="item in renderMaskData"
+          :key="item.properties.id"
           :pharmacy="item"
-          :distanceToPharmacy="item.distanceToPharmacy"
         ></PharmacyCard>
       </div>
       <div v-if="getTheRestPharmacyCardNum > 0" class="read-more">
